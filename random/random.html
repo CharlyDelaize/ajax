@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get a random number</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <input type="number" id="min" placeholder="min">
+    <input type="number" id="max" placeholder="max">
+
+    <div id="response-ajax"></div>
+    <button type="button" onclick="getRandom()">Get random number</button>
+
+    <script>
+        //$(document).ready(function (){
+            function getRandom(){
+                let minValue = $('#min').val();
+                let maxValue = $('#max').val();
+
+                $.ajax({
+                    url :"random.php",
+                    method: 'GET',
+                    data: {min: minValue, max: maxValue}
+                }).done(function (dataServer) {
+                    $("div#response-ajax").text(dataServer);
+                }).fail( function (responseError){
+                    console.error('Fail random.php');
+                    console.error(responseError);
+                })
+            }
+        //});
+    </script>
+</body>
+</html>
