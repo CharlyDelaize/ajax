@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photos</title>
+
+    <!--JQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</head>
+<body>
+<h1>Post</h1>
+<div class="container">
+<form class="form-post" onsubmit="hideUpdateForm()">
+    <input type="text">
+
+    <textarea></textarea>
+
+    <button>Créer</button>
+    <button onsubmit="updatePost">Modifier</button>
+</form>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Message</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody id="tbody-post">
+            <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<form onsubmit="sendPost()">
+    <label>
+        Nom
+    </label>
+        <input type="text" id="formulaire" name="Nom"> <br>
+    
+    <label for="commentaire">Message</label><br>
+        <textarea name="commentaires"  id="commentaire" cols="80" rows="25"></textarea><br>
+        <input type="submit" name="inscription" value="Envoyer">
+  </form>
+
+<script>
+    $(document).ready(function (){
+
+        $.ajax({
+            url:'https://jsonplaceholder.typicode.com/posts'
+        }).done(function (posts){
+            for (let i = 0; i < posts.length; i++){
+                // Création d'une ligne
+                $('#tbody-post').append('<tr id="tr-'+ i +'"></tr>');
+
+                // Remplissage colone
+                $('#tr-' + i).append('<td>' + posts[i].title + '</td>');
+                $('#tr-' + i).append('<td>' + posts[i].body + '</td>');
+                $('#tr-' + i).append('<td><button onclick="modif()">Modifier</button></td>');
+            }
+        }).fail( function (error){
+            console.log(error)
+        })
+
+    })
+    // Envoi du formulaire
+    function sendPost(){
+    let titleValue = $("#formulaire").val();
+    let textValue = $("#commentaire").val();
+    $.ajax({
+      method: 'POST',
+      url: 'https://jsonplaceholder.typicode.com/posts',
+      data: {title: titleValue, text: textValue, userId:1}
+    }).done(function(data){
+      alert('success result ' + data.userId);
+    }
+    ).fail(function(error){
+      console.log(error);
+    })
+  }
+</script>
+
+</body>
+</html>

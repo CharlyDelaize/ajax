@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div>
+    <form class="form-post" onsubmit="hideUpdateForm()">
+      <input type="text">
+  
+      <textarea></textarea>
+  
+      <button>Créer</button>
+      <button onsubmit="updatePost">Modifier</button>
+  </form>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col" id="title">Title</th>
+      <th scope="col">Message</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody id="tbody-post">
+    <tr>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<form onsubmit="sendPost()">
+  <label>
+      Nom
+  </label>
+      <input type="text" id="formulaire" name="Nom"> <br>
+  
+
+  <label for="commentaire">Message</label><br>
+      <textarea name="commentaires" cols="80" rows="25"></textarea><br>
+      <input type="submit" name="inscription" value="Envoyer">
+</form>
+
+<script>
+  $(document).ready(function(){
+    // Listing posts
+    $.ajax({
+      url: 'https://jsonplaceholder.typicode.com/posts'
+    }).done(function(posts){
+      for(var i = 0; i < posts.length; i++){
+        $('tbody tr').append('<td>' + posts[i].title + '</td>')
+      }
+    }).fail(function(error){
+      console.log(error);
+    })
+  })
+  // Envoi du formulaire
+  function sendPost(){
+    let titleValue = $("#title").val();
+    let textValue = $("#text").val();
+    $.ajax({
+      method: 'POST',
+      url: 'https://jsonplaceholder.typicode.com/posts',
+      data: {title: titleValue, text: textValue, userId:1}
+    }).done(function(data){
+      alert('success result ' + data.userId);
+    }
+    ).fail(function(error){
+      console.log(error);
+    })
+  }
+
+  function modif(){
+    let titleValue = $("#formulaire").val();
+    let textValue = $("#commentaire").val();
+    $.ajax({
+      method: 'POST',
+      url: 'https://jsonplaceholder.typicode.com/posts',
+      data: {title: titleValue, text: textValue, userId:1}
+    }).done(function(data){
+      alert('success result ' + data.userId);
+    }
+    ).fail(function(error){
+      console.log(error);
+    })
+  }
+
+  function showUpdateForm(){
+    $('#form-post').removeClass("d-none");
+    $('#form-post').addClass("d-block");
+
+    $('create-post-button').removeClass("d-block");
+    $('update-post-button').removeClass("d-block");
+
+    $('create-post-button').removeClass("d-none");
+    $('update-post-button').removeClass("d-none");
+
+    $('create-post-button').addClass("d-block");
+    $('update-post-button').addClass("d-none");
+  }
+
+  function hideUpdateForm(){
+      $('#form-post').removeClass('d-block');
+      $('#form-post').addClass('d-none');
+  }
+
+  function updatePost(){
+      let titleValue = $('#title').val();
+      let bodyValue = $('#body').val();
+      let postId = $('#post-id').val();
+
+      $.ajax({
+          method: 'PUT',
+          url: "https://jsonplaceholder.typicode.com/posts/" + postId,
+          data: {title: titleValue, body: bodyValue}
+      }).done( function (){
+          alert('OK');
+      })
+  }
+  
+</script>
+</body>
+</html>
